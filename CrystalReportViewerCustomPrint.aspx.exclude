@@ -1,0 +1,141 @@
+﻿<%@ Page Language="VB" %>
+
+<%@ Register Assembly="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304"
+    Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
+
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="Neodynamic.SDK.Web" %>
+<%@ Import Namespace="CrystalDecisions.CrystalReports.Engine" %>
+<%@ Import Namespace="CrystalDecisions.Shared" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<script runat="server">
+
+    Protected Sub Page_Init(sender As Object, e As EventArgs)
+        'Print report???
+        If WebClientPrint.ProcessPrintJob(Request) Then
+
+            'load and set report's data source
+            Dim ds As New DataSet()
+            ds.ReadXml(Server.MapPath("~/NorthwindProducts.xml"))
+
+            'create and load rpt in memory
+            Dim myCrystalReport As New ReportDocument()
+            myCrystalReport.Load(Server.MapPath("~/MyProducts.rpt"))
+            myCrystalReport.SetDataSource(ds.Tables(0))
+
+            'Export rpt to a temp PDF and get binary content            
+            Dim pdfContent As Byte() = Nothing
+            Using ms As MemoryStream = DirectCast(myCrystalReport.ExportToStream(ExportFormatType.PortableDocFormat), MemoryStream)
+                pdfContent = ms.ToArray()
+            End Using
+
+            'Now send this file to the client side for printing
+            'IMPORTANT: Adobe Reader needs to be installed at the client side
+
+            'get selected printer
+            Dim printerName As String = Server.UrlDecode(Request("printerName"))
+
+            'create a temp file name for our PDF report...
+            Dim fileName As String = Guid.NewGuid().ToString("N") + ".pdf"
+
+            'Create a PrintFile object with the pdf report
+            Dim file As New PrintFile(pdfContent, fileName)
+            'Create a ClientPrintJob and send it back to the client!
+            Dim cpj As New ClientPrintJob()
+            'set file to print...
+            cpj.PrintFile = file
+            'set client printer...
+            If printerName = "Default Printer" Then
+                cpj.ClientPrinter = New DefaultPrinter()
+            Else
+                cpj.ClientPrinter = New InstalledPrinter(printerName)
+            End If
+            'send it...
+            cpj.SendToClient(Response)
+            
+        End If
+    End Sub
+    
+    Protected Sub Page_Load(sender As Object, e As System.EventArgs)
+        
+        If (IsPostBack = False) Then
+            'load and set report's data source
+            Dim ds As New DataSet()
+            ds.ReadXml(Server.MapPath("~/NorthwindProducts.xml"))
+
+            'create and load rpt in memory
+            Dim myCrystalReport As New ReportDocument()
+            myCrystalReport.Load(Server.MapPath("~/MyProducts.rpt"))
+            myCrystalReport.SetDataSource(ds.Tables(0))
+        
+            CrystalReportViewer1.ReportSource = myCrystalReport
+        End If
+                
+    End Sub
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <CR:CrystalReportViewer ID="CrystalReportViewer1" runat="server" AutoDataBind="true" />
+    </div>
+    </form>
+
+    <%-- Add Reference to jQuery at Google CDN --%>
+    <script src="jquery.min.js"></script>
+
+    <%-- Register the WebClientPrint script code --%>
+    <%=Neodynamic.SDK.Web.WebClientPrint.CreateScript()%>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            <%-- remove built-in print button behavior --%>
+            $('#<%=CrystalReportViewer1.ClientID%>_toptoolbar_print').prop("onclick", null).attr("onclick", null);
+            <%-- add our own print button behavior --%>
+            $('#<%=CrystalReportViewer1.ClientID%>_toptoolbar_print').click(function() {
+                jsWebClientPrint.print('printerName=' + $('#ddlClientPrinters').val()); 
+            });
+
+            $('#<%=CrystalReportViewer1.ClientID%>_toptoolbar_print').parent().parent().prepend('<select name="ddlClientPrinters" id="ddlClientPrinters" class="comboEditable" title="Select Printer"><option>Loading printers...</option></select>');
+            
+
+            <%-- load client printers through WebClientPrint --%>
+            jsWebClientPrint.getPrinters();
+
+            
+        });
+
+        <%-- Time delay we'll wait for getting client printer names --%>
+        var wcppGetPrintersDelay_ms = 5000; //5 sec
+
+        function wcpGetPrintersOnSuccess(){
+            <%-- Display client installed printers --%>
+            if(arguments[0].length > 0){
+                var p=arguments[0].split("|");
+                var options = '<option>Default Printer</option>';
+                for (var i = 0; i < p.length; i++) {
+                    options += '<option>' + p[i] + '</option>';
+                }
+                $('#ddlClientPrinters').html(options);                                            
+            }else{
+                alert("No printers are installed in your system.");
+            }
+        }
+
+        function wcpGetPrintersOnFailure() {
+            <%-- Do something if printers cannot be got from the client --%>
+            alert("No printers are installed in your system.");
+        }
+
+    </script>
+
+</body>
+</html>

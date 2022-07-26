@@ -1,0 +1,113 @@
+<%@ Master Language="VB" CodeFile="MasterPage.master.vb" Inherits="MasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Master Page</title>
+    <link href="App_Themes/Theme1/StyleSheet.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="image/favicon.ico" />
+</head>
+<body onkeydown="cancelBack();onKeyDown()">
+    <form id="form1" runat="server" defaultbutton="btnFake" style="height:100%;">
+    <div style="height:100%;">
+        <ajaxToolkit:ToolkitScriptManager ID="ScriptManager1" runat="server" CombineScripts="false">
+        </ajaxToolkit:ToolkitScriptManager>
+
+<!--Progressbar-->
+<div style="position:relative;z-index:1000;">
+<ajaxToolkit:AlwaysVisibleControlExtender ID="AlwaysVisibleControlExtender1" runat="server"
+ TargetControlID="updProgress1"         
+ VerticalSide="Middle"
+ VerticalOffset="10"
+ HorizontalSide="Center"
+ HorizontalOffset="100"
+ ScrollEffectDuration=".1">
+</ajaxToolkit:AlwaysVisibleControlExtender>
+<ajaxToolkit:UpdateProgress ID="updProgress1" runat="server" Visible="true" DisplayAfter="0" DynamicLayout="true">
+    <ProgressTemplate>
+        <div class="progressbar_bg">
+            <div class="progressbar">
+                <div>Please wait...</div>
+                <img src="../image/ajax-loader.gif" alt="Now loading please wait..." />
+            </div>
+        </div>
+    </ProgressTemplate>
+</ajaxToolkit:UpdateProgress></div>
+<!--Progressbar-->
+
+        <table border="0" cellpadding="0" cellspacing="0" style="width:100%;height:100%;background:url('<%=relativePath %>') repeat-x bottom;">
+            <tr style="height:50">
+                <td><asp:Label ID="lblACCPAC" runat="server" CssClass="center"></asp:Label>
+                </td>
+                <td style="text-align:right;">Login as : 
+                <asp:Label ID="lblUserName" runat="server" Text='<%#Session("USERNAME")%>' CssClass="link"></asp:Label>
+                <asp:Label ID="lblSection" runat="server" Text=''></asp:Label>
+                <asp:DropDownList ID="ddlSection" runat="server" AutoPostBack="true" ></asp:DropDownList>
+                |
+                <asp:LinkButton ID="lbtnLogout" runat="server" PostBackUrl="~/login.aspx"
+                 CausesValidation="false">Log out</asp:LinkButton>
+                </td>
+            </tr>
+            <tr style="vertical-align:top;">
+                <td style="height:95%;width:150px;padding-top:30px;">
+                <asp:ImageButton ID="imgbtnHome" runat="server" ImageUrl="~/image/m_PurchaseOrder.png" PostBackUrl="~/Purchase/Default.aspx"/><asp:ImageButton ID="imgbtnNew" runat="server" ImageUrl="~/image/m_NewRequisition.png" PostBackUrl="~/Purchase/Requisition.aspx"/><asp:ImageButton ID="imgbtnHist" runat="server" ImageUrl="~/image/m_History.png" PostBackUrl="~/Purchase/RequisitionHistory.aspx"/>
+<%--<asp:Menu ID="Menu1" runat="server" StaticDisplayLevels="2"
+ StaticEnableDefaultPopOutImage="false"
+ Orientation="vertical">
+ <DynamicMenuItemStyle HorizontalPadding="15" />
+ <LevelMenuItemStyles>
+    <asp:MenuItemStyle CssClass="menu" HorizontalPadding="10" />
+    <asp:MenuItemStyle CssClass="menu" />
+ </LevelMenuItemStyles>
+<Items>
+        <asp:MenuItem Text="Purchase Order" NavigateUrl="~/">
+            <asp:MenuItem Text="- New Requisition" NavigateUrl="~/Purchase/Requisition.aspx"></asp:MenuItem>
+            <asp:MenuItem Text="- Requisition History" NavigateUrl="~/Purchase/RequisitionHistory.aspx"></asp:MenuItem>
+            <asp:MenuItem Text="- TEST PR" NavigateUrl="~/Purchase/PR.aspx"></asp:MenuItem>
+        </asp:MenuItem>
+</Items>
+</asp:Menu>--%>
+                </td>
+                <td style="padding-top:30px;">
+                    <asp:contentplaceholder id="ContentPlaceHolder1" runat="server">
+                    </asp:contentplaceholder>
+                </td>
+            </tr>
+        </table>
+        <asp:LinkButton ID="btnFake" runat="server" style="display:none" OnClientClick="return false;" ></asp:LinkButton>
+    </div>
+    </form>
+<script type="text/javascript">
+    function ddlSection_change(source) {
+        if (!confirm("This action will clear all items you'd selected. Are you sure?")) {
+            source.selectedIndex = source.oldIndex;
+            return false;
+        }
+        else {
+            __doPostBack('ddlSection', '')
+            return true;
+        }
+    }
+
+function CancelPostBack() {
+    var objMan = Sys.WebForms.PageRequestManager.getInstance();
+    if (objMan.get_isInAsyncPostBack())
+        objMan.abortPostBack();
+}//window.pageYOffset
+function cancelBack(){
+    if ((event.keyCode == 8 ||    
+       (event.keyCode == 37 && event.altKey) ||    
+       (event.keyCode == 39 && event.altKey))   
+        &&    
+       (event.srcElement.form == null || event.srcElement.isTextEdit == false)){   
+        event.cancelBubble = true;   
+        event.returnValue = false;   
+    }
+}
+function onKeyDown(){
+if (window.event.keyCode == 13)  {     event.returnValue = false;      event.cancel = true; }
+}
+</script>
+</body>
+</html>

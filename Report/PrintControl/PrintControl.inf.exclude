@@ -1,0 +1,23 @@
+[version]
+    ; version signature (same for both NT and Win95) do not remove
+    signature="$CHICAGO$"   
+    AdvancedINF=2.0   
+
+[Add.Code]
+    PrintControl.dll=PrintControl.dll
+
+[PrintControl.dll]
+    file-win32-x86=thiscab   
+    ; *** add your controls CLSID here ***
+    CLSID={BAEE131D-290A-4541-A50A-8936F159563A}
+    ; Add your ocx's file version here.   
+    FileVersion=10,2,0,1146
+    RegisterServer=yes 
+
+[Setup Hooks]
+    hook1=hook1
+
+[hook1]
+    run=%EXTRACT_DIR%\DependencyInstaller.exe
+
+; ====================== end of PrintControl.inf =====================

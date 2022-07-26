@@ -1,0 +1,94 @@
+
+Partial Class Setting_Permission
+    Inherits System.Web.UI.Page
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not IsPostBack Then
+            ddlACCPAC.Items.Add(New ListItem("Head Office", "HOPTHO"))
+            ddlACCPAC.Items.Add(New ListItem("---------------------", ""))
+            ddlACCPAC.Items.Add(New ListItem("PO Domestic", "HPTPOL"))
+            ddlACCPAC.Items.Add(New ListItem("PO Import", "HOPT"))
+            ddlACCPAC.Items.Add(New ListItem("PO Material", "HPTMAT"))
+            ddlACCPAC.Items.Add(New ListItem("---------------------", ""))
+            ddlACCPAC.Items.Add(New ListItem("RP Domestic", "HPTRPL"))
+            ddlACCPAC.Items.Add(New ListItem("RP Import", "HOPTRP"))
+            ddlACCPAC.Items.Add(New ListItem("---------------------", ""))
+            ddlACCPAC.Items.Add(New ListItem("SLR Domestic", "HPTNPL"))
+            ddlACCPAC.Items.Add(New ListItem("SLR Import", "HOPTNP"))
+            ddlACCPAC.Items.Add(New ListItem("SLR Material", "HMATNP"))
+            ddlACCPAC.Items.Add(New ListItem("---------------------", ""))
+            ddlACCPAC.Items.Add(New ListItem("GMO Domestic", "HPTMOL"))
+            ddlACCPAC.Items.Add(New ListItem("GMO Import", "HOPTMO"))
+            For Each listitem1 As ListItem In ddlACCPAC.Items
+                If listitem1.Value = "" Then
+                    listitem1.Attributes.Add("disabled", "disabled")
+                End If
+            Next
+
+            ddlACCPAC.SelectedValue = Session("DATABASE")
+            Dim PermissionBLL As New PermissionBLL()
+            Dim dt As System.Data.DataTable = PermissionBLL.getAllPermission(ddlACCPAC.SelectedValue)
+            gvUserPermission.DataSource = dt
+            gvUserPermission.DataBind()
+
+            ddlDomain.Items.Add(New ListItem("HO", "HO"))
+            ddlDomain.Items.Add(New ListItem("PO", "PO"))
+            ddlDomain.Items.Add(New ListItem("RP", "RP"))
+            ddlDomain.Items.Add(New ListItem("MO", "MO"))
+
+        End If
+    End Sub
+
+    Protected Sub ddlACCPAC_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlACCPAC.SelectedIndexChanged
+        Dim PermissionBLL As New PermissionBLL
+        Dim dt As System.Data.DataTable = PermissionBLL.getAllPermission(ddlACCPAC.SelectedValue)
+        gvUserPermission.DataSource = dt
+        gvUserPermission.DataBind()
+    End Sub
+
+    Protected Sub gvUserPermission_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles gvUserPermission.RowCommand
+        Select Case e.CommandName
+            Case "SingleClick" : gvUserPermission.SelectedIndex = e.CommandArgument
+        End Select
+    End Sub
+
+    Protected Sub gvUserPermission_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvUserPermission.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            'e.Row.Attributes.Add("onclick", String.Format("javascript:__doPostBack(this,'Select${0}')", e.Row.RowIndex))
+            'Dim gvButton As LinkButton = CType(e.Row.Cells(0).Controls(0), LinkButton)
+            'Dim postBackReference As String = ClientScript.GetPostBackClientHyperlink(gvButton, "click")
+            'Dim postBackReference As String = Page.ClientScript.GetPostBackEventReference(gvButton, "click")
+            Dim postBackReference As String = ClientScript.GetPostBackClientHyperlink(gvUserPermission, String.Format("Select${0}", e.Row.RowIndex))
+            e.Row.Attributes.Add("onclick", postBackReference)
+        End If
+    End Sub
+
+    Protected Sub gvUserPermission_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvUserPermission.SelectedIndexChanged
+        Dim gvRow As GridViewRow = gvUserPermission.SelectedRow
+        ddlDomain.SelectedValue = gvRow.Cells(1).Text
+        txbUser.Text = gvRow.Cells(2).Text
+        txbSection.Text = gvRow.Cells(5).Text
+        rdoVendor.SelectedValue = CType(gvRow.Cells(6).Controls(0), CheckBox).Checked
+        rdoPRApv.SelectedValue = CType(gvRow.Cells(7).Controls(0), CheckBox).Checked
+        rdoPRRcp.SelectedValue = CType(gvRow.Cells(8).Controls(0), CheckBox).Checked
+        rdoPREdit.SelectedValue = CType(gvRow.Cells(9).Controls(0), CheckBox).Checked
+    End Sub
+
+    Protected Sub EditState(ByVal Edit As Boolean)
+        txbUser.Enabled = Edit
+        txbUser.ReadOnly = -Edit
+        rdoVendor.Enabled = Edit
+        rdoPRApv.Enabled = Edit
+        rdoPRRcp.Enabled = Edit
+        rdoPREdit.Enabled = Edit
+
+    End Sub
+
+    Protected Sub btnAdd_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAdd.Click
+        EditState(True)
+    End Sub
+
+    Protected Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click
+        EditState(False)
+    End Sub
+End Class

@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Purchase_Online", "..\Purchase_Online\", "{4B80B113-1CA9-4FF9-908F-53FF6C1956B6}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		ProjectReferences = ""
+		Debug.AspNetCompiler.VirtualPath = "/Purchase_Online"
+		Debug.AspNetCompiler.PhysicalPath = "..\Purchase_Online\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Purchase_Online\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/Purchase_Online"
+		Release.AspNetCompiler.PhysicalPath = "..\Purchase_Online\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Purchase_Online\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "49556"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4B80B113-1CA9-4FF9-908F-53FF6C1956B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B80B113-1CA9-4FF9-908F-53FF6C1956B6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4B80B113-1CA9-4FF9-908F-53FF6C1956B6}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B80B113-1CA9-4FF9-908F-53FF6C1956B6}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{4B80B113-1CA9-4FF9-908F-53FF6C1956B6}.Release|x86.ActiveCfg = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

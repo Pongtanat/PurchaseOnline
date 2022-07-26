@@ -1,0 +1,79 @@
+<%@ Page Language="VB" MasterPageFile="~/MasterPage.master" AutoEventWireup="false" CodeFile="Permission.aspx.vb" Inherits="Setting_Permission" title="Permission Setting" EnableEventValidation="false" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<table border="0" cellpadding="1" cellspacing="0" class="light"><tr><td class="light">
+    <asp:DropDownList ID="ddlACCPAC" runat="server" AutoPostBack="true"></asp:DropDownList>
+    <asp:GridView ID="gvUserPermission" runat="server" AutoGenerateColumns="false">
+        <HeaderStyle Wrap="false" />
+        <RowStyle HorizontalAlign="center" Wrap="false" />
+        <Columns>
+            <asp:ButtonField Text="Button" CommandName="SingleClick" Visible="false" />
+            <asp:BoundField DataField="DOMAINNAME" HeaderText="DOMAIN" />
+            <asp:BoundField DataField="USERNAME" HeaderText="User Name" />
+            <asp:BoundField DataField="ACCPAC" HeaderText="ACCPAC"/>
+            <asp:BoundField DataField="Factory" HeaderText="Factory" />
+            <asp:BoundField DataField="Section" HeaderText="Section" />
+            <asp:CheckBoxField DataField="AllowSelectVendor" HeaderText="Select Vendor" />
+            <asp:CheckBoxField DataField="AllowSubmitPRReceive" HeaderText="Submit PR Receive" />
+            <asp:CheckBoxField DataField="AllowSubmitPRApprove" HeaderText="Submit PR Approve" />
+            <asp:CheckBoxField DataField="AllowChangeRequisition" HeaderText="Edit Requisition" />
+            <asp:CheckBoxField DataField="AllowEditPermission" HeaderText="Edit Permission" />
+            <asp:BoundField DataField="AudtDate" HeaderText="Modify date" />
+        </Columns>
+    </asp:GridView>
+    <table border="0" cellpadding="1" cellspacing="0">
+        <tr>
+            <td colspan="2" align="center"><h4>Setting</h4></td>
+        </tr>
+        <tr>
+            <td align="right">Domain :</td>
+            <td><asp:DropDownList ID="ddlDomain" runat="server" Enabled="False" Width="100"></asp:DropDownList></td>
+        </tr>
+        <tr>
+            <td align="right">User Name :</td>
+            <td style="width:180px"><asp:TextBox ID="txbUser" runat="server" Text=""
+             CssClass="watermarked" ReadOnly="true"></asp:TextBox>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Section :</td>
+            <td><asp:TextBox ID="txbSection" runat="server" Text=""
+             CssClass="watermarked" ReadOnly="true"></asp:TextBox></td>
+        </tr>
+        <tr>
+            <td align="right">Select Vendor :</td>
+            <td><asp:RadioButtonList ID="rdoVendor" runat="server" RepeatDirection="Horizontal" >
+                <asp:ListItem Text="Yes" Value="True"></asp:ListItem>
+                <asp:ListItem Text="No" Value="False"></asp:ListItem>
+            </asp:RadioButtonList></td>
+        </tr>
+        <tr>
+            <td align="right">Submit PR Approve Date :</td>
+            <td><asp:RadioButtonList ID="rdoPRApv" runat="server" RepeatDirection="Horizontal" >
+                <asp:ListItem Text="Yes" Value="True"></asp:ListItem>
+                <asp:ListItem Text="No" Value="False"></asp:ListItem>
+            </asp:RadioButtonList></td>
+        </tr>
+        <tr>
+            <td align="right">Submit PR Received Date :</td>
+            <td><asp:RadioButtonList ID="rdoPRRcp" runat="server" RepeatDirection="Horizontal" >
+                <asp:ListItem Text="Yes" Value="True"></asp:ListItem>
+                <asp:ListItem Text="No" Value="False"></asp:ListItem>
+            </asp:RadioButtonList></td>
+        </tr>
+        <tr>
+            <td align="right">Edit Requisition :</td>
+            <td><asp:RadioButtonList ID="rdoPREdit" runat="server" RepeatDirection="Horizontal" >
+                <asp:ListItem Text="Yes" Value="True"></asp:ListItem>
+                <asp:ListItem Text="No" Value="False"></asp:ListItem>
+            </asp:RadioButtonList></td>
+        </tr>
+        <tr><td></td>
+        <td align="right"><asp:Button ID="btnAdd" runat="server" Text="Add New"/>
+        <asp:Button ID="btnEdit" runat="server" Text=" Edit " />
+        <asp:Button ID="btnDelete" runat="server" Text="Delete" OnClientClick="return confirm('Are you sure you want to delete?')" />
+        <asp:Button ID="btnSave" runat="server" Text="Save" OnClientClick="return confirm('Save changed?')" Visible="true" />
+        <asp:Button ID="btnCancel" runat="server" Text="Cancel" Visible="true" /></td></tr>
+    </table>
+</td></tr></table>
+</asp:Content>
+

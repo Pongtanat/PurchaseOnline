@@ -1,0 +1,52 @@
+﻿Imports PurchaseReqImportService
+Partial Class Purchase_PR
+    Inherits System.Web.UI.Page
+
+    Protected Sub Button1_Click(sender As Object, e As System.EventArgs) Handles Button1.Click
+        Dim client As New PurchReqImportServiceClient
+        Dim PurchReq As New AxdPurchReqImport
+        Dim PurchReqTable As New AxdEntity_PurchReqTable
+        Dim PurchReqLine As New AxdEntity_PurchReqLine
+        Dim PurchReqDim As New AxdEntity_InventDim
+        Dim callcontext As New CallContext
+        Dim keys() As EntityKey
+        Dim key As EntityKey
+        Dim fld As KeyField
+
+        PurchReqTable.PurchReqName = "Prachya"
+        PurchReqTable.RequiredDate = Now
+        PurchReqTable.RequisitionStatus = AxdEnum_PurchReqRequisitionStatus.Approved
+
+        PurchReqDim.InventSiteId = "HO"
+
+        PurchReqLine.LineNum = 1
+        PurchReqLine.ItemId = "A-CY-001"
+        PurchReqLine.InventDim = New AxdEntity_InventDim() {PurchReqDim}
+        PurchReqLine.Name = "Kata Material"
+        PurchReqLine.LineType = AxdEnum_PurchReqLineType.Item
+        PurchReqLine.PurchQty = 1.0
+        PurchReqLine.PurchPrice = 15.0
+        PurchReqLine.CurrencyCode = "THB"
+        PurchReqLine.RequiredDate = Now
+        PurchReqLine.LineAmount = 15
+        PurchReqLine.DeliveryName = "Hoya Opics (Thailand) Ltd." 'Head Office
+        PurchReqLine.PriceUnit = 1
+
+        PurchReqTable.PurchReqLine = New AxdEntity_PurchReqLine() {PurchReqLine}
+        PurchReq.PurchReqTable = New AxdEntity_PurchReqTable() {PurchReqTable}
+
+        callcontext.Company = "HOYA"
+        callcontext.Language = "en-us"
+        callcontext.LogonAsUser = "HO\Prachya"
+
+        Try
+            keys = client.create(callcontext, PurchReq)
+            key = keys(0)
+            fld = key.KeyData(0)
+            Label1.Text = "Purchase requisition: " & fld.Value & " created successfully."
+        Catch ex As Exception
+            Label2.Text = "error: " & ex.Message
+        End Try
+
+    End Sub
+End Class
